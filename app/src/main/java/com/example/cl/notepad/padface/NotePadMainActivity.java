@@ -69,28 +69,10 @@ public class NotePadMainActivity extends AppCompatActivity {
        setSupportActionBar(toolbar);
 
         //noteNumText= (TextView) findViewById(R.id.numtext);
-        // imageViewAdd = (ImageView) findViewById(R.id.addbutton);
+
 
         progressDialog=new ProgressDialog(this);
- /*       imageViewAdd.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Intent intent=new Intent();
-                intent.setClass(NotePadMainActivity.this,NotePadNewActivity.class);
-                NotePadMainActivity.this.startActivity(intent);
-                return false;
-            }
-        });*/
-       // imageViewSearch=(ImageView) findViewById(R.id.searchbutton);
-      /*  imageViewSearch.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Intent intent=new Intent();
-                intent.setClass(NotePadMainActivity.this,NotePadSearchActivity.class);
-                NotePadMainActivity.this.startActivity(intent);
-                return false;
-            }
-        });*/
+
         noteList= (ListView) findViewById(R.id.notelist);
         noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -161,54 +143,13 @@ public class NotePadMainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_main,menu);
 
 
-        /*menuItem_0=menu.add(0,0,0,"设置");
-        PrefVO.setIconEnable(menu,true);
-        menuItem_0.setIcon(R.drawable.setting_dark);
-        menuItem_0.setOnMenuItemClickListener(new ItemClickListenerClass());
-        menuItem_1=menu.add(0,1,1,"锁定");
-        menuItem_1.setIcon(R.drawable.lock_light);
-        menuItem_1.setOnMenuItemClickListener(new ItemClickListenerClass());*/
+
 
         return true;
     }
-/*private class ItemClickListenerClass implements MenuItem.OnMenuItemClickListener{
 
-   /* @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-            case 0:{
-                Intent intent=new Intent();
-                intent.setClass(NotePadMainActivity.this,NotePadPreferenceActivity.class);
-                NotePadMainActivity.this.startActivity(intent);
-                break;
-            }
-            case 1:{
-                final EditText keytext=new EditText(NotePadMainActivity.this);
-                keytext.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                AlertDialog.Builder builder=new AlertDialog.Builder(NotePadMainActivity.this);
-                builder.setTitle("请输入密码");
-                builder.setIcon(R.drawable.lock_light);
-                builder.setView(keytext);
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(PrefVO.userPasswordValue.equals(keytext.getText().toString())){
-                            PrefVO.appLock(true);
-                            Toast.makeText(NotePadMainActivity.this,"已锁定",Toast.LENGTH_LONG).show();
-                            NotePadMainActivity.this.onResume();
-                        }
-                        else{
-                            Toast.makeText(NotePadMainActivity.this,"密码错误",Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-                builder.setNegativeButton("取消",null);
-                builder.create().show();
-            }
-        }
-        return false;
-    }
-}*/
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -315,13 +256,15 @@ public class NotePadMainActivity extends AppCompatActivity {
                 builder.create().show();
                 break;}
             case 2:{
-                Intent intent=new Intent(Intent.ACTION_SEND, Uri.parse("smsto:"));
+                Intent intent=new Intent(Intent.ACTION_SEND);
                 if(!note.getNoteContent().equals(note.getNoteTitle())){
-                    intent.putExtra("sms_body",note.getNoteTitle()+"\n"+note.getNoteContent());
+                    intent.putExtra(Intent.EXTRA_TEXT,note.getNoteTitle()+"\n"+note.getNoteContent());
                 }
                 else{
-                    intent.putExtra("sms_body",note.getNoteContent());
+                    intent.putExtra(Intent.EXTRA_TEXT,note.getNoteContent());
                 }
+                intent.setType("text/plain");
+                startActivity(intent);
                 break;
             }
         }

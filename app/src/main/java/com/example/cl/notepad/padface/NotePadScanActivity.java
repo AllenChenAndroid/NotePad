@@ -96,13 +96,15 @@ public class NotePadScanActivity extends AppCompatActivity {
                 builder.create().show();
                 break;
             case R.id.send:
-                Intent intentsend=new Intent(Intent.ACTION_SEND, Uri.parse("smsto:"));
+                Intent intentsend=new Intent(Intent.ACTION_SEND);
                 if(!noteVO.getNoteContent().equals(noteVO.getNoteTitle())){
-                    intentsend.putExtra("sms_body",noteVO.getNoteTitle()+"\n"+noteContentText);
+                    intentsend.putExtra(Intent.EXTRA_TEXT,noteVO.getNoteTitle()+"\n"+noteContentText);
                 }
                 else{
-                    intentsend.putExtra("sms_body",noteVO.getNoteContent());
+                    intentsend.putExtra(Intent.EXTRA_TEXT,noteVO.getNoteContent());
                 }
+                intentsend.setType("text/plain");
+
                 NotePadScanActivity.this.startActivity(intentsend);
                 break;
 
