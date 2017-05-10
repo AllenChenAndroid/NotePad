@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
     <TextView
-        android:layout_width="40px"
+        android:layout_width="100px"
         android:layout_height="match_parent"
         android:id="@+id/itemimage"
         android:textSize="25sp"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:gravity="center_horizontal"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

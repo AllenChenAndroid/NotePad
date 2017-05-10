@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -37,7 +39,7 @@ import java.util.List;
  * Created by cl on 2017/4/9.
  */
 
-public class NotePadMainActivity extends Activity {
+public class NotePadMainActivity extends AppCompatActivity {
     private TextView noteNumText;
     private ImageView imageViewAdd;
     private ImageView imageViewSearch;
@@ -63,11 +65,14 @@ public class NotePadMainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        noteNumText= (TextView) findViewById(R.id.numtext);
-         imageViewAdd = (ImageView) findViewById(R.id.addbutton);
+       Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_main);
+       setSupportActionBar(toolbar);
+
+        //noteNumText= (TextView) findViewById(R.id.numtext);
+        // imageViewAdd = (ImageView) findViewById(R.id.addbutton);
 
         progressDialog=new ProgressDialog(this);
-        imageViewAdd.setOnTouchListener(new View.OnTouchListener() {
+ /*       imageViewAdd.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Intent intent=new Intent();
@@ -75,9 +80,9 @@ public class NotePadMainActivity extends Activity {
                 NotePadMainActivity.this.startActivity(intent);
                 return false;
             }
-        });
-        imageViewSearch=(ImageView) findViewById(R.id.searchbutton);
-        imageViewSearch.setOnTouchListener(new View.OnTouchListener() {
+        });*/
+       // imageViewSearch=(ImageView) findViewById(R.id.searchbutton);
+      /*  imageViewSearch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Intent intent=new Intent();
@@ -85,7 +90,7 @@ public class NotePadMainActivity extends Activity {
                 NotePadMainActivity.this.startActivity(intent);
                 return false;
             }
-        });
+        });*/
         noteList= (ListView) findViewById(R.id.notelist);
         noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -153,20 +158,22 @@ public class NotePadMainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_main,menu);
 
-        menuItem_0=menu.add(0,0,0,"设置");
+
+        /*menuItem_0=menu.add(0,0,0,"设置");
         PrefVO.setIconEnable(menu,true);
         menuItem_0.setIcon(R.drawable.setting_dark);
         menuItem_0.setOnMenuItemClickListener(new ItemClickListenerClass());
         menuItem_1=menu.add(0,1,1,"锁定");
         menuItem_1.setIcon(R.drawable.lock_light);
-        menuItem_1.setOnMenuItemClickListener(new ItemClickListenerClass());
+        menuItem_1.setOnMenuItemClickListener(new ItemClickListenerClass());*/
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
-private class ItemClickListenerClass implements MenuItem.OnMenuItemClickListener{
+/*private class ItemClickListenerClass implements MenuItem.OnMenuItemClickListener{
 
-    @Override
+   /* @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case 0:{
@@ -201,13 +208,63 @@ private class ItemClickListenerClass implements MenuItem.OnMenuItemClickListener
         }
         return false;
     }
-}
+}*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+             case R.id.add:
+                 Intent intent=new Intent();
+                 intent.setClass(NotePadMainActivity.this,NotePadNewActivity.class);
+                 NotePadMainActivity.this.startActivity(intent);
+                 break;
+            case R.id.search:
+                Intent intentsearch=new Intent();
+                intentsearch.setClass(NotePadMainActivity.this,NotePadSearchActivity.class);
+                NotePadMainActivity.this.startActivity(intentsearch);
+                break;
+            case R.id.setting:
+                Intent intentsetting=new Intent();
+                intentsetting.setClass(NotePadMainActivity.this,NotePadPreferenceActivity.class);
+                NotePadMainActivity.this.startActivity(intentsetting);
+                break;
+            case R.id.lock:
+                final EditText keytext=new EditText(NotePadMainActivity.this);
+                keytext.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                AlertDialog.Builder builder=new AlertDialog.Builder(NotePadMainActivity.this);
+                builder.setTitle("请输入密码");
+                builder.setIcon(R.drawable.lock_light);
+                builder.setView(keytext);
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(PrefVO.userPasswordValue.equals(keytext.getText().toString())){
+                            PrefVO.appLock(true);
+                            Toast.makeText(NotePadMainActivity.this,"已锁定",Toast.LENGTH_LONG).show();
+                            NotePadMainActivity.this.onResume();
+                        }
+                        else{
+                            Toast.makeText(NotePadMainActivity.this,"密码错误",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消",null);
+                builder.create().show();
+                break;
+
+
+
+
+        }
+        return true;
+    }
+
     private void flush() {
         PrefVO.dataFlush();
         noteVOList=acess.findAllNote();
         noteBaseAdapter=new NoteBaseAdapter(this,noteVOList,R.layout.item);
         noteList.setAdapter(noteBaseAdapter);
-        noteNumText.setText(noteVOList.size()+"");
+//        noteNumText.setText(noteVOList.size()+"");
 
     }
 

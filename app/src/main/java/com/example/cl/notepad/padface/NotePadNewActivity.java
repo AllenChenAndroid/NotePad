@@ -3,6 +3,8 @@ package com.example.cl.notepad.padface;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -22,7 +24,7 @@ import java.util.Date;
  * Created by cl on 2017/4/9.
  */
 
-public class NotePadNewActivity extends Activity {
+public class NotePadNewActivity extends AppCompatActivity{
     private LinearLayout editLayout;
     private EditText noteTitleText;
     private EditText noteContentText;
@@ -59,6 +61,8 @@ public class NotePadNewActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_edit);
+        setSupportActionBar(toolbar);
         editLayout= (LinearLayout) findViewById(R.id.editlayout);
         editLayout.setBackgroundColor(PrefVO.themeColorValue);
         noteTitleText= (EditText) findViewById(R.id.titleedit);
@@ -94,10 +98,8 @@ public class NotePadNewActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menuItem_0=menu.add(0,0,0,"删除");
-        PrefVO.setIconEnable(menu,true);
-        menuItem_0.setIcon(R.drawable.delete_dark);
-        menuItem_0.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+      getMenuInflater().inflate(R.menu.toolbar_new,menu);
+       /* menuItem_0.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId())
@@ -109,8 +111,19 @@ public class NotePadNewActivity extends Activity {
                 }
                 return false;
             }
-        });
+        });*/
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.cancell:
+                NotePadNewActivity.this.finish();
+                break;
+
+        }
+        return true;
     }
 }

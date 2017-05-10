@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +25,7 @@ import com.example.cl.notepad.dbhandle.DBAccess;
  * Created by cl on 2017/4/9.
  */
 
-public class NotePadScanActivity extends Activity {
+public class NotePadScanActivity extends AppCompatActivity {
     private LinearLayout scanlayout;
     private TextView noteTitleText;
     private TextView noteContentText;
@@ -37,6 +39,8 @@ public class NotePadScanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.scan);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_scan);
+        setSupportActionBar(toolbar);
         scanlayout= (LinearLayout) findViewById(R.id.scanlayout);
         scanlayout.setBackgroundColor(PrefVO.themeColorValue);
         noteTitleText= (TextView) findViewById(R.id.titlescan);
@@ -56,65 +60,53 @@ public class NotePadScanActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        PrefVO.setIconEnable(menu,true);
-        menuItem_0=menu.add(0,0,0,"编辑");
-        menuItem_0.setIcon(R.drawable.edit_dark);
-        menuItem_0.setOnMenuItemClickListener(new MyMenuItemClickListener());
-        menuItem_1=menu.add(0,1,1,"删除");
-        menuItem_1.setIcon(R.drawable.delete_dark);
-        menuItem_1.setOnMenuItemClickListener(new MyMenuItemClickListener());
-         menuItem_2=menu.add(0,2,2,"短信发送");
-        menuItem_2.setIcon(R.drawable.message_dark);
-        menuItem_2.setOnMenuItemClickListener(new MyMenuItemClickListener());
-        return super.onCreateOptionsMenu(menu);
+       getMenuInflater().inflate(R.menu.toobar_scan,menu);
+        return true;
     }
-    class MyMenuItemClickListener implements MenuItem.OnMenuItemClickListener{
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()){
-                case 0:{
-                    Intent intent=new Intent();
-                    intent.setClass(NotePadScanActivity.this,NotePadEditActivity.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putParcelable("note",noteVO);
-                    intent.putExtra("noteBundle",bundle);
-                    NotePadScanActivity.this.startActivity(intent);
-                    NotePadScanActivity.this.finish();
-                    break;
 
-                }
-                case 1:{
-                    AlertDialog.Builder builder=new AlertDialog.Builder(NotePadScanActivity.this);
-                    builder.setTitle("删除");
-                    builder.setIcon(R.drawable.delete_dark);
-                    builder.setMessage("您确定要把日志删除吗？");
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            DBAccess access=new DBAccess(NotePadScanActivity.this);
-                            access.deleteNote(noteVO);
-                            dialogInterface.dismiss();
-                            Toast.makeText(NotePadScanActivity.this,"已删除",Toast.LENGTH_LONG).show();
-                            NotePadScanActivity.this.finish();
-                        }
-                    });
-                    builder.setNegativeButton("取消",null);
-                    builder.create().show();
-                    break;
-                }
-                case 2:{
-                    Intent intent=new Intent(Intent.ACTION_SEND, Uri.parse("smsto:"));
-                    if(!noteVO.getNoteContent().equals(noteVO.getNoteTitle())){
-                        intent.putExtra("sms_body",noteVO.getNoteTitle()+"\n"+noteContentText);
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.edit:
+                Intent intent=new Intent();
+                intent.setClass(NotePadScanActivity.this,NotePadEditActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putParcelable("note",noteVO);
+                intent.putExtra("noteBundle",bundle);
+                NotePadScanActivity.this.startActivity(intent);
+                NotePadScanActivity.this.finish();
+                break;
+            case R.id.delete:
+                AlertDialog.Builder builder=new AlertDialog.Builder(NotePadScanActivity.this);
+                builder.setTitle("删除");
+                builder.setIcon(R.drawable.delete_dark);
+                builder.setMessage("您确定要把日志删除吗？");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DBAccess access=new DBAccess(NotePadScanActivity.this);
+                        access.deleteNote(noteVO);
+                        dialogInterface.dismiss();
+                        Toast.makeText(NotePadScanActivity.this,"已删除",Toast.LENGTH_LONG).show();
+                        NotePadScanActivity.this.finish();
                     }
-                    else{
-                        intent.putExtra("sms_body",noteVO.getNoteContent());
-                    }
-                    NotePadScanActivity.this.startActivity(intent);
+                });
+                builder.setNegativeButton("取消",null);
+                builder.create().show();
+                break;
+            case R.id.send:
+                Intent intentsend=new Intent(Intent.ACTION_SEND, Uri.parse("smsto:"));
+                if(!noteVO.getNoteContent().equals(noteVO.getNoteTitle())){
+                    intentsend.putExtra("sms_body",noteVO.getNoteTitle()+"\n"+noteContentText);
                 }
-            }
-            return false;
+                else{
+                    intentsend.putExtra("sms_body",noteVO.getNoteContent());
+                }
+                NotePadScanActivity.this.startActivity(intentsend);
+                break;
+
         }
-
+        return true;
     }
 }

@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -22,7 +25,7 @@ import java.util.Date;
  * Created by cl on 2017/4/9.
  */
 
-public class NotePadEditActivity extends Activity {
+public class NotePadEditActivity extends AppCompatActivity {
     private LinearLayout editLayout;
     private EditText noteTitleText;
     private EditText noteContentText;
@@ -33,7 +36,10 @@ public class NotePadEditActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit);
-        editLayout= (LinearLayout) findViewById(R.id.editlayout);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_edit);
+        setSupportActionBar(toolbar);
+
+       editLayout= (LinearLayout) findViewById(R.id.editlayout);
         editLayout.setBackgroundColor(PrefVO.themeColorValue);
         noteTitleText= (EditText) findViewById(R.id.titleedit);
         noteContentText= (EditText) findViewById(R.id.contentedit);
@@ -46,12 +52,10 @@ public class NotePadEditActivity extends Activity {
 
     }
 
-    @Override
+   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menuItem_0=menu.add(0,0,0,"删除");
-        PrefVO.setIconEnable(menu,true);
-        menuItem_0.setIcon(R.drawable.delete_dark);
-        menuItem_0.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+       getMenuInflater().inflate(R.menu.toolbar_edit,menu);
+       /* menuItem_0.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                switch (menuItem.getItemId()){
@@ -78,9 +82,37 @@ public class NotePadEditActivity extends Activity {
                 return false;
             }
         });
-
-        return super.onCreateOptionsMenu(menu);
+*/
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.delete:
+                AlertDialog.Builder builder=new AlertDialog.Builder(NotePadEditActivity.this);
+                builder.setTitle("删除");
+                builder.setIcon(R.drawable.delete_dark);
+                builder.setMessage("您确定要把日志删除吗？");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DBAccess access=new DBAccess(NotePadEditActivity.this);
+                        access.deleteNote(noteVO);
+                        dialogInterface.dismiss();
+                        Toast.makeText(NotePadEditActivity.this,"已删除",Toast.LENGTH_LONG).show();
+                        NotePadEditActivity.this.finish();
+                    }
+                });
+                builder.setNegativeButton("取消",null);
+                builder.create().show();
+                break;
+
+    }
+    return true;
+}
+
+
 
     @Override
     public void onBackPressed() {

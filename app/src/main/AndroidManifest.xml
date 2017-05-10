@@ -8,20 +8,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".padface.NotePadMainActivity"
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".padface.NotePadMainActivity"></activity>
         <activity android:name=".padface.NotePadNewActivity"></activity>
         <activity android:name=".padface.NotePadPreferenceActivity"></activity>
         <activity android:name=".padface.NotePadScanActivity"></activity>
         <activity android:name=".padface.NotePadSearchActivity"
             android:theme="@android:style/Theme.Dialog"></activity>
-        <activity android:name=".padface.NotePadEditActivity"></activity>
+        <activity android:name=".padface.NotePadEditActivity"
+            ></activity>
         <receiver android:name=".padface.NotePadAppWidget">
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget"/>

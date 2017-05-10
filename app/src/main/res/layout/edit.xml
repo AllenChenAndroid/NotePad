@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/editlayout">
-    <EditText
+  >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_edit"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        ></android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:id="@+id/editlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/titleedit"
-        android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="10px"
-        android:maxLines="1"
-        android:textSize="20sp"/>
-    <com.example.cl.notepad.padface.NoteEditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/contentedit"
-        android:paddingTop="10px"
-        android:paddingLeft="10px"
-        android:paddingRight="10px"
-        android:textSize="20sp"
-        android:textColor="#484848"
-        android:background="#ffffff"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="10px"/>
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleedit"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:layout_marginTop="10px"
+            android:maxLines="1"
+            android:textSize="20sp"/>
+        <com.example.cl.notepad.padface.NoteEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/contentedit"
+            android:paddingTop="10px"
+            android:paddingLeft="10px"
+            android:paddingRight="10px"
+            android:textSize="20sp"
+            android:textColor="#484848"
+            android:background="#ffffff"
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="10px"/></LinearLayout>
 
 </LinearLayout>
