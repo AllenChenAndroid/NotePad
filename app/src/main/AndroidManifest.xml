@@ -23,13 +23,6 @@
             android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name=".padface.NotePadEditActivity"
             ></activity>
-        <receiver android:name=".padface.NotePadAppWidget">
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget"/>
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
